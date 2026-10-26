@@ -30,10 +30,7 @@
       "languages": "Linguagens e Frameworks",
       "cloud": "Cloud e Infraestrutura",
       "data": "Dados e Mensageria",
-      "architecture": "Arquitetura e Observabilidade"
-    },
-    "items": {
-      "microservices": "Microsserviços"
+      "observability": "Monitoramento e Observabilidade"
     },
     "certification": "AWS Certified Cloud Practitioner · 2026"
   },

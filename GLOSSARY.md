@@ -9,6 +9,6 @@ _Avoid_: experience, job
 
 **Skill**: A technology Rafael works with, belonging to exactly one Skill Group.
 
-**Skill Group**: One of the four categories skills are shown under: Languages & Frameworks, Cloud & Infrastructure, Data & Messaging, Architecture & Observability.
+**Skill Group**: One of the four categories skills are shown under: Languages & Frameworks, Cloud & Infrastructure, Data & Messaging, Monitoring & Observability.
 
 **Locale**: The language a page is rendered in: `pt-BR` (default) or `en`.

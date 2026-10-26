@@ -35,9 +35,7 @@ export function Skills() {
                     ) : (
                       <NodeIcon className="text-muted size-[18px]" />
                     )}
-                    {skill.messageKey
-                      ? t(`items.${skill.messageKey}`)
-                      : skill.name}
+                    {skill.name}
                   </li>
                 ))}
               </ul>

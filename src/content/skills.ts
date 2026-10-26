@@ -4,33 +4,35 @@ import {
   siGrafana,
   siJavascript,
   siKubernetes,
+  siNewrelic,
   siNodedotjs,
   siOpentelemetry,
   siPostgresql,
   siPython,
   siReact,
   siRedis,
+  siRollbar,
   siRuby,
   siRubyonrails,
+  siSentry,
   siServerless,
+  siTerraform,
   siVuedotjs,
   type SimpleIcon,
 } from "simple-icons";
 
 export type Skill = {
   name: string;
-  /** Key under Skills.items when the name needs translating. */
-  messageKey?: "microservices";
   icon?: SimpleIcon;
 };
 
 export type SkillGroup = {
-  id: "languages" | "cloud" | "data" | "architecture";
+  id: "languages" | "cloud" | "data" | "observability";
   skills: Skill[];
 };
 
-// Brands without an icon in simple-icons (AWS services, OpenObserve) render
-// with a neutral glyph.
+// Brands without an icon in simple-icons (AWS services, OpenObserve) and
+// generic practices (CI/CD) render with a neutral glyph.
 export const skillGroups: SkillGroup[] = [
   {
     id: "languages",
@@ -48,9 +50,12 @@ export const skillGroups: SkillGroup[] = [
     id: "cloud",
     skills: [
       { name: "AWS" },
+      { name: "Serverless", icon: siServerless },
       { name: "Docker", icon: siDocker },
       { name: "Kubernetes", icon: siKubernetes },
-      { name: "CI/CD", icon: siGithubactions },
+      { name: "Terraform", icon: siTerraform },
+      { name: "GitHub Actions", icon: siGithubactions },
+      { name: "CI/CD" },
     ],
   },
   {
@@ -64,14 +69,14 @@ export const skillGroups: SkillGroup[] = [
     ],
   },
   {
-    id: "architecture",
+    id: "observability",
     skills: [
-      { name: "Microservices", messageKey: "microservices" },
-      { name: "Serverless", icon: siServerless },
-      { name: "Clean Architecture" },
       { name: "OpenTelemetry", icon: siOpentelemetry },
       { name: "OpenObserve" },
       { name: "Grafana", icon: siGrafana },
+      { name: "New Relic", icon: siNewrelic },
+      { name: "Sentry", icon: siSentry },
+      { name: "Rollbar", icon: siRollbar },
     ],
   },
 ];
