@@ -95,9 +95,10 @@ export async function submitContact(
     return { status: "error", code: "verification_failed" };
   }
 
-  // Only messages that actually go out count, so a Resend outage or an
-  // expired Turnstile token never locks a real visitor out.
-  if (deps.rateLimiter.isLimited(ip)) {
+  // Reserve the slot before awaiting the send so a concurrent burst can't
+  // slip past the limit; give it back if the send fails, so only delivered
+  // messages count and a Resend outage never locks a real visitor out.
+  if (!deps.rateLimiter.tryConsume(ip)) {
     return { status: "error", code: "rate_limited" };
   }
 
@@ -109,10 +110,10 @@ export async function submitContact(
       text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
     });
   } catch (error) {
+    deps.rateLimiter.release(ip);
     console.error("Failed to send contact email", error);
     return { status: "error", code: "send_failed" };
   }
 
-  deps.rateLimiter.record(ip);
   return { status: "success" };
 }

@@ -1,8 +1,11 @@
 export type RateLimiter = {
-  /** True when `key` already has `limit` attempts inside the window. */
-  isLimited(key: string): boolean;
-  /** Counts an attempt for `key`. */
-  record(key: string): void;
+  /**
+   * Atomically takes a slot for `key`; returns false when it is already at
+   * its limit inside the window.
+   */
+  tryConsume(key: string): boolean;
+  /** Gives back the most recent slot taken for `key`. */
+  release(key: string): void;
   /** Number of keys currently tracked. */
   readonly size: number;
 };
@@ -41,15 +44,21 @@ export function createRateLimiter({
   }
 
   return {
-    isLimited(key) {
+    tryConsume(key) {
       const current = now();
       sweep(current);
-      return recent(key, current).length >= limit;
+      const kept = recent(key, current);
+      if (kept.length >= limit) {
+        hits.set(key, kept);
+        return false;
+      }
+      hits.set(key, [...kept, current]);
+      return true;
     },
-    record(key) {
-      const current = now();
-      sweep(current);
-      hits.set(key, [...recent(key, current), current]);
+    release(key) {
+      const kept = hits.get(key)?.slice(0, -1) ?? [];
+      if (kept.length === 0) hits.delete(key);
+      else hits.set(key, kept);
     },
     get size() {
       return hits.size;

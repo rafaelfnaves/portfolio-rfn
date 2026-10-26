@@ -170,6 +170,21 @@ describe("submitContact", () => {
     expect(result).toEqual({ status: "success" });
   });
 
+  it("lets only five of a concurrent burst through", async () => {
+    let resolveSends!: () => void;
+    const sendsHeld = new Promise<void>((r) => (resolveSends = r));
+    const deps = makeDeps({ sendMail: vi.fn(() => sendsHeld) });
+
+    const burst = Array.from({ length: 10 }, () =>
+      submitContact(validInput, "1.2.3.4", deps),
+    );
+    resolveSends();
+    const results = await Promise.all(burst);
+
+    expect(results.filter((r) => r.status === "success")).toHaveLength(5);
+    expect(deps.sendMail).toHaveBeenCalledTimes(5);
+  });
+
   it("rejects submissions that fail human verification", async () => {
     const deps = makeDeps({ verifyHuman: vi.fn().mockResolvedValue(false) });
 
@@ -213,10 +228,19 @@ describe("createRateLimiter", () => {
       now: () => now,
     });
 
-    limiter.record("ip");
-    expect(limiter.isLimited("ip")).toBe(true);
+    expect(limiter.tryConsume("ip")).toBe(true);
+    expect(limiter.tryConsume("ip")).toBe(false);
     now = 1001;
-    expect(limiter.isLimited("ip")).toBe(false);
+    expect(limiter.tryConsume("ip")).toBe(true);
+  });
+
+  it("gives a slot back when released", () => {
+    const limiter = createRateLimiter({ limit: 1, windowMs: 1000 });
+
+    expect(limiter.tryConsume("ip")).toBe(true);
+    limiter.release("ip");
+
+    expect(limiter.tryConsume("ip")).toBe(true);
   });
 
   it("forgets keys whose attempts have all expired", () => {
@@ -227,11 +251,11 @@ describe("createRateLimiter", () => {
       now: () => now,
     });
 
-    for (let i = 0; i < 100; i++) limiter.record(`ip-${i}`);
+    for (let i = 0; i < 100; i++) limiter.tryConsume(`ip-${i}`);
     expect(limiter.size).toBe(100);
 
     now = 2000;
-    limiter.record("fresh");
+    limiter.tryConsume("fresh");
 
     expect(limiter.size).toBe(1);
   });
