@@ -1,0 +1,7 @@
+pnpm-lock.yaml
+.next
+.remember
+.playwright-mcp
+references
+playwright-report
+test-results

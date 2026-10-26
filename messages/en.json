@@ -1,0 +1,92 @@
+{
+  "Metadata": {
+    "title": "Rafael Naves — Software Engineer",
+    "description": "Software Engineer focused on scalable backends, serverless architectures on AWS and observability."
+  },
+  "Nav": {
+    "skipToContent": "Skip to content",
+    "skills": "Skills",
+    "projects": "Projects",
+    "contact": "Contact",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "switchLocale": "Ler em português",
+    "toggleTheme": "Toggle light/dark theme"
+  },
+  "Hero": {
+    "role": "Software Engineer",
+    "tagline": "I build scalable backends, serverless architectures and systems that hold up in production.",
+    "cta": "Get in touch"
+  },
+  "Social": {
+    "linkedin": "Rafael Naves on LinkedIn",
+    "github": "Rafael Naves on GitHub",
+    "email": "Email Rafael Naves"
+  },
+  "Skills": {
+    "title": "Skills",
+    "intro": "Technologies I work with day to day.",
+    "groups": {
+      "languages": "Languages & Frameworks",
+      "cloud": "Cloud & Infrastructure",
+      "data": "Data & Messaging",
+      "architecture": "Architecture & Observability"
+    },
+    "items": {
+      "microservices": "Microservices"
+    },
+    "certification": "AWS Certified Cloud Practitioner · 2026"
+  },
+  "Projects": {
+    "title": "Projects",
+    "intro": "Personal projects and case studies of systems I've built.",
+    "kind": {
+      "personal": "Personal project",
+      "caseStudy": "Case study"
+    },
+    "code": "Code",
+    "live": "Live demo",
+    "diagramLabel": "Architecture diagram of {name}",
+    "items": {
+      "simi": {
+        "name": "SIMI",
+        "description": "Finance tracking for personal and travel expenses. A Rails 8 app with Phlex and RubyUI on the frontend, AI features powered by RubyLLM, storage on Cloudflare R2 and automated deploys with Kamal and GitHub Actions."
+      },
+      "imagePipeline": {
+        "name": "Image processing pipeline",
+        "description": "Decoupled image processing from a Rails monolith, handling around 600 images per minute. Direct uploads to S3 through presigned URLs, fan-out with SNS and SQS, and Lambda services in Python and Ruby for resizing, fraud detection and AI integration."
+      },
+      "vehicleLookup": {
+        "name": "Serverless vehicle lookup",
+        "description": "Migrated vehicle lookup from a monolith to serverless Python microservices on AWS — API Gateway, Cognito, DynamoDB, SQS and SSM — with end-to-end observability through OpenTelemetry, OpenObserve and Grafana."
+      }
+    }
+  },
+  "Contact": {
+    "title": "Let's talk",
+    "intro": "Have a project, a role, or just want to swap ideas? Send me a message.",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "namePlaceholder": "Your name",
+    "emailPlaceholder": "you@example.com",
+    "messagePlaceholder": "Tell me a bit about what you need",
+    "submit": "Send message",
+    "sending": "Sending…",
+    "success": "Message sent! I'll get back to you soon.",
+    "errors": {
+      "name_required": "Please enter your name.",
+      "name_too_long": "Name must be at most 100 characters.",
+      "email_invalid": "Please enter a valid email.",
+      "message_too_short": "Message must be at least 10 characters.",
+      "message_too_long": "Message must be at most 5000 characters.",
+      "invalid": "Please review the highlighted fields.",
+      "rate_limited": "Too many messages in a short time. Please try again later.",
+      "verification_failed": "We couldn't verify you're human. Reload the page and try again.",
+      "send_failed": "Your message couldn't be sent right now. Try again or email me directly."
+    }
+  },
+  "Footer": {
+    "rights": "© {year} Rafael Naves"
+  }
+}

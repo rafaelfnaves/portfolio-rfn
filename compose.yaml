@@ -1,0 +1,21 @@
+# Runs on the Oracle Cloud instance. Secrets come from a .env file next to this one.
+services:
+  web:
+    image: ${IMAGE:-ghcr.io/rafaelfnaves/portfolio-rfn:latest}
+    restart: unless-stopped
+    environment:
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY}
+      CONTACT_FROM: ${CONTACT_FROM:-Portfolio <contact@rafaelfnaves.dev>}
+      CONTACT_TO: ${CONTACT_TO:-r.naves21@gmail.com}
+    # No published ports: traffic only arrives through the tunnel.
+
+  cloudflared:
+    image: cloudflare/cloudflared:2026.10.4
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      web:
+        condition: service_healthy
