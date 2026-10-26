@@ -31,8 +31,8 @@ export type SkillGroup = {
   skills: Skill[];
 };
 
-// Brands without an icon in simple-icons (AWS services, OpenObserve) and
-// generic practices (CI/CD) render with a neutral glyph.
+// Brands without an icon in simple-icons (AWS services, OpenObserve) render
+// with a neutral glyph.
 export const skillGroups: SkillGroup[] = [
   {
     id: "languages",
@@ -54,8 +54,7 @@ export const skillGroups: SkillGroup[] = [
       { name: "Docker", icon: siDocker },
       { name: "Kubernetes", icon: siKubernetes },
       { name: "Terraform", icon: siTerraform },
-      { name: "GitHub Actions", icon: siGithubactions },
-      { name: "CI/CD" },
+      { name: "CI/CD", icon: siGithubactions },
     ],
   },
   {
