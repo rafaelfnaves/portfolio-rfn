@@ -1,7 +1,6 @@
 import { useTranslations } from "next-intl";
+import { CONTACT_EMAIL } from "@/site";
 import { GithubIcon, LinkedinIcon, MailIcon } from "./icons";
-
-export const EMAIL = "r.naves21@gmail.com";
 
 const links = [
   {
@@ -10,7 +9,7 @@ const links = [
     Icon: LinkedinIcon,
   },
   { key: "github", href: "https://github.com/rafaelfnaves", Icon: GithubIcon },
-  { key: "email", href: `mailto:${EMAIL}`, Icon: MailIcon },
+  { key: "email", href: `mailto:${CONTACT_EMAIL}`, Icon: MailIcon },
 ] as const;
 
 export function SocialLinks({ className = "" }: { className?: string }) {

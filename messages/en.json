@@ -76,6 +76,7 @@
     "success": "Message sent! I'll get back to you soon.",
     "errors": {
       "name_required": "Please enter your name.",
+      "name_invalid": "Name can't contain line breaks.",
       "name_too_long": "Name must be at most 100 characters.",
       "email_invalid": "Please enter a valid email.",
       "message_too_short": "Message must be at least 10 characters.",

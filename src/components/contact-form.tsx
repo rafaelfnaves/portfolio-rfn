@@ -1,33 +1,57 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
 import Script from "next/script";
-import { useActionState, useEffect, useRef } from "react";
-import { sendContactMessage } from "@/contact/actions";
-import type { ContactResult } from "@/contact/submit-contact";
+import { useActionState, useEffect, useRef, useState } from "react";
+import { sendContactMessage, type ContactFormState } from "@/contact/actions";
+
+type TurnstileOptions = { sitekey: string; theme: "light" | "dark" };
 
 declare global {
   interface Window {
-    turnstile?: { reset(container?: string | HTMLElement): void };
+    turnstile?: {
+      render(container: HTMLElement, options: TurnstileOptions): string;
+      reset(widgetId: string): void;
+      remove(widgetId: string): void;
+    };
   }
 }
 
 const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
-const initial: ContactResult = { status: "idle" };
+const initial: ContactFormState = { status: "idle" };
 
 export function ContactForm() {
   const t = useTranslations("Contact");
+  const { resolvedTheme } = useTheme();
   const [state, action, pending] = useActionState(sendContactMessage, initial);
-  const formRef = useRef<HTMLFormElement>(null);
+  const [turnstileReady, setTurnstileReady] = useState(false);
   const turnstileRef = useRef<HTMLDivElement>(null);
+  const widgetId = useRef<string | null>(null);
+
+  // Rendered explicitly so the widget follows the site's theme toggle, not
+  // just the OS setting; re-rendered whenever that theme changes.
+  useEffect(() => {
+    const container = turnstileRef.current;
+    if (!turnstileReady || !container || !window.turnstile) return;
+    const id = window.turnstile.render(container, {
+      sitekey: SITE_KEY,
+      theme: resolvedTheme === "dark" ? "dark" : "light",
+    });
+    widgetId.current = id;
+    return () => window.turnstile?.remove(id);
+  }, [turnstileReady, resolvedTheme]);
 
   // Turnstile tokens are single-use: get a fresh one after every attempt.
   useEffect(() => {
-    if (state.status === "idle") return;
-    if (state.status === "success") formRef.current?.reset();
-    if (turnstileRef.current) window.turnstile?.reset(turnstileRef.current);
+    if (state.status !== "idle" && widgetId.current) {
+      window.turnstile?.reset(widgetId.current);
+    }
   }, [state]);
 
+  // React resets the form after every action; on error the action echoes the
+  // submitted values so the fields come back filled in. On success they clear.
+  const values = state.values ?? { name: "", email: "", message: "" };
   const fieldErrors =
     state.status === "error" && state.code === "invalid"
       ? state.fieldErrors
@@ -39,6 +63,7 @@ export function ContactForm() {
       id: `contact-${name}`,
       name,
       required: true,
+      defaultValue: values[name],
       placeholder: t(`${name}Placeholder`),
       "aria-invalid": error ? true : undefined,
       "aria-describedby": error ? `contact-${name}-error` : undefined,
@@ -57,10 +82,11 @@ export function ContactForm() {
   }
 
   return (
-    <form ref={formRef} action={action} className="space-y-5">
+    <form action={action} className="space-y-5">
       <Script
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
         strategy="lazyOnload"
+        onReady={() => setTurnstileReady(true)}
       />
 
       <div className="grid gap-5 sm:grid-cols-2">
@@ -98,12 +124,8 @@ export function ContactForm() {
         >
           {t("message")}
         </label>
-        <textarea
-          rows={6}
-          minLength={10}
-          maxLength={5000}
-          {...fieldProps("message")}
-        />
+        {/* No minLength: the server trims first, so it owns the length rule. */}
+        <textarea rows={6} maxLength={5000} {...fieldProps("message")} />
         {fieldError("message")}
       </div>
 
@@ -122,12 +144,7 @@ export function ContactForm() {
         />
       </div>
 
-      <div
-        ref={turnstileRef}
-        className="cf-turnstile"
-        data-sitekey={SITE_KEY}
-        data-theme="auto"
-      />
+      <div ref={turnstileRef} className="min-h-[65px]" />
 
       <div className="flex flex-col items-center gap-4 pt-2">
         <button type="submit" className="btn-primary" disabled={pending}>

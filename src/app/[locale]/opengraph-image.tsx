@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { SITE_HOST } from "@/site";
 
 export const alt = "Rafael Naves";
 export const size = { width: 1200, height: 630 };
@@ -36,7 +37,7 @@ export default async function OpenGraphImage({
         {t("role")}
       </div>
       <div style={{ marginTop: 56, fontSize: 28, color: "#5c5e62" }}>
-        rafaelfnaves.dev
+        {SITE_HOST}
       </div>
       <div
         style={{

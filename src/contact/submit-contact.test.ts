@@ -84,7 +84,19 @@ describe("submitContact", () => {
 
     expect(result).toMatchObject({
       status: "error",
-      fieldErrors: { name: "name_required" },
+      fieldErrors: { name: "name_invalid" },
+    });
+  });
+
+  it("measures the message length after trimming", async () => {
+    const result = await submitContact(
+      { ...validInput, message: "    hi there    " },
+      "1.2.3.4",
+      makeDeps(),
+    );
+
+    expect(result).toMatchObject({
+      fieldErrors: { message: "message_too_short" },
     });
   });
 
@@ -139,6 +151,25 @@ describe("submitContact", () => {
     expect(result).toEqual({ status: "success" });
   });
 
+  it("does not count failed verifications or failed sends against the rate limit", async () => {
+    const deps = makeDeps({
+      verifyHuman: vi.fn().mockResolvedValue(false),
+      sendMail: vi.fn().mockRejectedValue(new Error("Resend is down")),
+    });
+    for (let i = 0; i < 5; i++) {
+      await submitContact(validInput, "1.2.3.4", deps);
+    }
+    vi.mocked(deps.verifyHuman).mockResolvedValue(true);
+    for (let i = 0; i < 5; i++) {
+      await submitContact(validInput, "1.2.3.4", deps);
+    }
+    vi.mocked(deps.sendMail).mockResolvedValue(undefined);
+
+    const result = await submitContact(validInput, "1.2.3.4", deps);
+
+    expect(result).toEqual({ status: "success" });
+  });
+
   it("rejects submissions that fail human verification", async () => {
     const deps = makeDeps({ verifyHuman: vi.fn().mockResolvedValue(false) });
 
@@ -158,6 +189,19 @@ describe("submitContact", () => {
 
     expect(result).toEqual({ status: "error", code: "send_failed" });
   });
+
+  it("reports a send failure instead of throwing when verification errors", async () => {
+    const deps = makeDeps({
+      verifyHuman: vi
+        .fn()
+        .mockRejectedValue(new Error("TURNSTILE_SECRET_KEY is not set")),
+    });
+
+    const result = await submitContact(validInput, "1.2.3.4", deps);
+
+    expect(result).toEqual({ status: "error", code: "send_failed" });
+    expect(deps.sendMail).not.toHaveBeenCalled();
+  });
 });
 
 describe("createRateLimiter", () => {
@@ -169,9 +213,26 @@ describe("createRateLimiter", () => {
       now: () => now,
     });
 
-    expect(limiter.tryConsume("ip")).toBe(true);
-    expect(limiter.tryConsume("ip")).toBe(false);
+    limiter.record("ip");
+    expect(limiter.isLimited("ip")).toBe(true);
     now = 1001;
-    expect(limiter.tryConsume("ip")).toBe(true);
+    expect(limiter.isLimited("ip")).toBe(false);
+  });
+
+  it("forgets keys whose attempts have all expired", () => {
+    let now = 0;
+    const limiter = createRateLimiter({
+      limit: 5,
+      windowMs: 1000,
+      now: () => now,
+    });
+
+    for (let i = 0; i < 100; i++) limiter.record(`ip-${i}`);
+    expect(limiter.size).toBe(100);
+
+    now = 2000;
+    limiter.record("fresh");
+
+    expect(limiter.size).toBe(1);
   });
 });

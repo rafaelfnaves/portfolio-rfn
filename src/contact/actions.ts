@@ -18,21 +18,34 @@ async function clientIp(): Promise<string> {
   );
 }
 
-export async function sendContactMessage(
-  _prev: ContactResult,
-  formData: FormData,
-): Promise<ContactResult> {
-  const field = (key: string) => String(formData.get(key) ?? "");
+export type ContactValues = { name: string; email: string; message: string };
 
-  return submitContact(
+/**
+ * React resets a form after every action, so on error we echo the submitted
+ * values back for the form to refill itself with.
+ */
+export type ContactFormState = ContactResult & { values?: ContactValues };
+
+export async function sendContactMessage(
+  _prev: ContactFormState,
+  formData: FormData,
+): Promise<ContactFormState> {
+  const field = (key: string) => String(formData.get(key) ?? "");
+  const values = {
+    name: field("name"),
+    email: field("email"),
+    message: field("message"),
+  };
+
+  const result = await submitContact(
     {
-      name: field("name"),
-      email: field("email"),
-      message: field("message"),
+      ...values,
       website: field("website"),
       turnstileToken: field("cf-turnstile-response"),
     },
     await clientIp(),
     { verifyHuman: verifyTurnstile, rateLimiter, sendMail: sendWithResend },
   );
+
+  return result.status === "error" ? { ...result, values } : result;
 }

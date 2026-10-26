@@ -6,8 +6,8 @@ services:
     environment:
       RESEND_API_KEY: ${RESEND_API_KEY}
       TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY}
-      CONTACT_FROM: ${CONTACT_FROM:-Portfolio <contact@rafaelfnaves.dev>}
-      CONTACT_TO: ${CONTACT_TO:-r.naves21@gmail.com}
+      CONTACT_FROM: ${CONTACT_FROM:-}
+      CONTACT_TO: ${CONTACT_TO:-}
     # No published ports: traffic only arrives through the tunnel.
 
   cloudflared:

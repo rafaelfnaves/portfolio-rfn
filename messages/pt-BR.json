@@ -76,6 +76,7 @@
     "success": "Mensagem enviada! Respondo em breve.",
     "errors": {
       "name_required": "Informe seu nome.",
+      "name_invalid": "O nome não pode conter quebras de linha.",
       "name_too_long": "O nome deve ter no máximo 100 caracteres.",
       "email_invalid": "Informe um e-mail válido.",
       "message_too_short": "A mensagem deve ter pelo menos 10 caracteres.",

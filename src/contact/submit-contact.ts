@@ -24,6 +24,7 @@ export type ContactDeps = {
 
 export type FieldErrorCode =
   | "name_required"
+  | "name_invalid"
   | "name_too_long"
   | "email_invalid"
   | "message_too_short"
@@ -51,7 +52,7 @@ const contactSchema = z.object({
     .trim()
     .min(1, "name_required")
     .max(100, "name_too_long")
-    .regex(/^[^\r\n]*$/, "name_required"),
+    .regex(/^[^\r\n]*$/, "name_invalid"),
   email: z.string().trim().pipe(z.email("email_invalid")),
   message: z
     .string()
@@ -82,12 +83,22 @@ export async function submitContact(
     return { status: "error", code: "invalid", fieldErrors };
   }
 
-  if (!deps.rateLimiter.tryConsume(ip)) {
-    return { status: "error", code: "rate_limited" };
+  let human: boolean;
+  try {
+    human = await deps.verifyHuman(input.turnstileToken, ip);
+  } catch (error) {
+    // Misconfiguration (e.g. missing secret), not the visitor's fault.
+    console.error("Human verification failed to run", error);
+    return { status: "error", code: "send_failed" };
+  }
+  if (!human) {
+    return { status: "error", code: "verification_failed" };
   }
 
-  if (!(await deps.verifyHuman(input.turnstileToken, ip))) {
-    return { status: "error", code: "verification_failed" };
+  // Only messages that actually go out count, so a Resend outage or an
+  // expired Turnstile token never locks a real visitor out.
+  if (deps.rateLimiter.isLimited(ip)) {
+    return { status: "error", code: "rate_limited" };
   }
 
   const { name, email, message } = parsed.data;
@@ -102,5 +113,6 @@ export async function submitContact(
     return { status: "error", code: "send_failed" };
   }
 
+  deps.rateLimiter.record(ip);
   return { status: "success" };
 }
