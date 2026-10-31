@@ -1,0 +1,90 @@
+{
+  "Metadata": {
+    "title": "Rafael Naves — Engenheiro de Software",
+    "description": "Engenheiro de Software focado em backends escaláveis, arquiteturas serverless na AWS e observabilidade."
+  },
+  "Nav": {
+    "skipToContent": "Pular para o conteúdo",
+    "skills": "Habilidades",
+    "projects": "Projetos",
+    "contact": "Contato",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu",
+    "switchLocale": "Read in English",
+    "toggleTheme": "Alternar tema claro/escuro"
+  },
+  "Hero": {
+    "role": "Engenheiro de Software",
+    "tagline": "Construo backends escaláveis, arquiteturas serverless e sistemas que se sustentam em produção.",
+    "cta": "Entrar em contato"
+  },
+  "Social": {
+    "linkedin": "LinkedIn de Rafael Naves",
+    "github": "GitHub de Rafael Naves",
+    "email": "Enviar e-mail para Rafael Naves"
+  },
+  "Skills": {
+    "title": "Habilidades",
+    "intro": "Tecnologias com que trabalho no dia a dia.",
+    "groups": {
+      "languages": "Linguagens e Frameworks",
+      "cloud": "Cloud e Infraestrutura",
+      "data": "Dados e Mensageria",
+      "observability": "Observabilidade"
+    },
+    "certification": "AWS Certified Cloud Practitioner · 2026"
+  },
+  "Projects": {
+    "title": "Projetos",
+    "intro": "Projetos pessoais e estudos de caso de sistemas que construí.",
+    "kind": {
+      "personal": "Projeto pessoal",
+      "caseStudy": "Estudo de caso"
+    },
+    "code": "Código",
+    "live": "Ver online",
+    "diagramLabel": "Diagrama de arquitetura de {name}",
+    "items": {
+      "simi": {
+        "name": "SIMI",
+        "description": "Controle financeiro para gastos pessoais e de viagens. Aplicação Rails 8 com Phlex e RubyUI no frontend, recursos de IA com RubyLLM, armazenamento no Cloudflare R2 e deploy automatizado com Kamal e GitHub Actions."
+      },
+      "imagePipeline": {
+        "name": "Pipeline de processamento de imagens",
+        "description": "Desacoplamento do processamento de imagens de um monólito Rails, com cerca de 600 imagens por minuto. Upload direto ao S3 via presigned URLs, distribuição com SNS e SQS e serviços em Lambda (Python e Ruby) para redimensionamento, antifraude e integração com IA."
+      },
+      "vehicleLookup": {
+        "name": "Consulta de veículos serverless",
+        "description": "Migração da consulta de veículos de um monólito para microsserviços serverless em Python na AWS — API Gateway, Cognito, DynamoDB, SQS e SSM — com observabilidade ponta a ponta via OpenTelemetry, OpenObserve e Grafana."
+      }
+    }
+  },
+  "Contact": {
+    "title": "Vamos conversar",
+    "intro": "Tem um projeto, uma vaga ou só quer trocar uma ideia? Mande uma mensagem.",
+    "name": "Nome",
+    "email": "E-mail",
+    "message": "Mensagem",
+    "namePlaceholder": "Seu nome",
+    "emailPlaceholder": "voce@exemplo.com",
+    "messagePlaceholder": "Conte um pouco sobre o que você precisa",
+    "submit": "Enviar mensagem",
+    "sending": "Enviando…",
+    "success": "Mensagem enviada! Respondo em breve.",
+    "errors": {
+      "name_required": "Informe seu nome.",
+      "name_invalid": "O nome não pode conter quebras de linha.",
+      "name_too_long": "O nome deve ter no máximo 100 caracteres.",
+      "email_invalid": "Informe um e-mail válido.",
+      "message_too_short": "A mensagem deve ter pelo menos 10 caracteres.",
+      "message_too_long": "A mensagem deve ter no máximo 5000 caracteres.",
+      "invalid": "Revise os campos destacados.",
+      "rate_limited": "Muitas mensagens em pouco tempo. Tente novamente mais tarde.",
+      "verification_failed": "Não foi possível verificar que você é humano. Recarregue a página e tente de novo.",
+      "send_failed": "Não foi possível enviar sua mensagem agora. Tente de novo ou mande um e-mail direto."
+    }
+  },
+  "Footer": {
+    "rights": "© {year} Rafael Naves"
+  }
+}

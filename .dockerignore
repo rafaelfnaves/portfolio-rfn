@@ -1,0 +1,16 @@
+.git
+.github
+.next
+node_modules
+.env*
+!.env.example
+.remember
+.playwright-mcp
+playwright-report
+test-results
+e2e
+docs
+references
+*.md
+Dockerfile
+compose.yaml
