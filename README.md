@@ -66,12 +66,12 @@ Add the domain `rafaelfnaves.dev`, then add the DNS records it shows (DKIM/SPF) 
 
 Create an environment named `production` with these secrets:
 
-| Secret            | Value                                                                                            |
-| ----------------- | ------------------------------------------------------------------------------------------------ |
-| `SSH_HOST`        | Server public IP or hostname                                                                     |
-| `SSH_USER`        | e.g. `ubuntu`                                                                                    |
-| `SSH_PRIVATE_KEY` | A deploy key (`ssh-keygen -t ed25519`); its `.pub` goes in the server's `~/.ssh/authorized_keys` |
-| `SSH_KNOWN_HOSTS` | Output of `ssh-keyscan <SSH_HOST>`                                                               |
+| Secret            | Value                                                                                                |
+| ----------------- | ---------------------------------------------------------------------------------------------------- |
+| `SSH_HOST`        | Server public IP or hostname                                                                         |
+| `SSH_USER`        | e.g. `ubuntu`                                                                                        |
+| `SSH_PRIVATE_KEY` | A deploy key (`ssh-keygen -t rsa -b 4096`); its `.pub` goes in the server's `~/.ssh/authorized_keys` |
+| `SSH_KNOWN_HOSTS` | Output of `ssh-keyscan <SSH_HOST>`                                                                   |
 
 Add a repository **variable** `TURNSTILE_SITE_KEY` with the public site key, which is baked into the client bundle at build time.
 
